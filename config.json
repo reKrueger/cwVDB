@@ -1,0 +1,43 @@
+{
+  "source_path": "C:\\source\\cadlib\\v_33.0",
+  "vectordb_path": "./vectordb",
+  "logs_path": "./logs",
+  "checkpoint_path": "./checkpoints",
+  
+  "embedding_model": "all-MiniLM-L6-v2",
+  "chunk_size": 1000,
+  "chunk_overlap": 200,
+  
+  "file_extensions": [".cpp", ".h", ".hpp", ".c", ".cc"],
+  
+  "exclude_dirs": [
+    ".git",
+    "build",
+    "obj",
+    "bin",
+    "Debug",
+    "Release",
+    "third_party",
+    "external",
+    "FuzzTests",
+    "Prototypes",
+    "build-tools"
+  ],
+  
+  "exclude_patterns": [
+    "*_generated.cpp",
+    "*_moc.cpp",
+    "*.pb.cc",
+    "*.pb.h",
+    "moc_*.cpp"
+  ],
+  
+  "min_file_size": 100,
+  "max_file_size": 1048576,
+  
+  "max_workers": 6,
+  "batch_size": 100,
+  
+  "enable_checkpoints": true,
+  "checkpoint_interval": 100
+}

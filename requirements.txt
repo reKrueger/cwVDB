@@ -1,0 +1,37 @@
+# cwVDB Dependencies - Updated for compatibility (2025-11-14)
+
+# Core Vector Database
+chromadb==0.4.22
+
+# Embeddings
+sentence-transformers==2.3.1
+transformers==4.36.0
+torch==2.1.2
+
+# RAG Framework
+langchain==0.1.0
+langchain-community==0.0.10
+
+# Git Integration
+GitPython==3.1.40
+
+# Progress bars
+tqdm==4.66.1
+
+# Environment
+python-dotenv==1.0.0
+
+# Code parsing (optional, but included)
+tree-sitter==0.20.4
+
+# Visualization (optional)
+graphviz==0.20.1
+
+# Web API
+flask==3.0.0
+flask-cors==4.0.0
+requests==2.31.0
+
+# Utils
+pathlib==1.0.1
+numpy==1.26.3

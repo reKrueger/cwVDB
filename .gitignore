@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.venv
+
+# Vector Database (DO NOT COMMIT - too large)
+vectordb/
+*.pkl
+*.bin
+
+# Logs
+logs/
+*.log
+
+# Checkpoints
+checkpoints/
+*.checkpoint
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Test databases
+test_vectordb/
+
+# Model cache (sentence-transformers downloads models here)
+.cache/
+models/
+
+env/
