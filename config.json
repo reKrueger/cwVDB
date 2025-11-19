@@ -1,5 +1,5 @@
 {
-  "source_path": "C:\\source\\cadlib\\v_33.0",
+  "source_path": "C:\\source\\cadlib\\v_33.0\\common",
   "vectordb_path": "./vectordb",
   "logs_path": "./logs",
   "checkpoint_path": "./checkpoints",
