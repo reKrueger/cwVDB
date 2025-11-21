@@ -1,5 +1,5 @@
 {
-  "source_path": "C:\\Github\\IOP",
+  "source_path": "C:\\source\\cadlib\\v_33.0\\3d\\esz",
   "vectordb_path": "./vectordb",
   "logs_path": "./logs",
   "checkpoint_path": "./checkpoints",
@@ -8,7 +8,17 @@
   "chunk_size": 1000,
   "chunk_overlap": 200,
   
-  "file_extensions": [".cpp", ".h", ".hpp", ".c", ".cc"],
+  "file_extensions": [
+    ".cpp", ".h", ".hpp", ".c", ".cc",
+    ".sln",
+    ".vcxproj",
+    ".vcxproj.filters",
+    ".props",
+    ".targets",
+    ".xml",
+    ".cmake",
+    "CMakeLists.txt"
+  ],
   
   "exclude_dirs": [
     ".git",
@@ -21,7 +31,11 @@
     "external",
     "FuzzTests",
     "Prototypes",
-    "build-tools"
+    "build-tools",
+    ".vs",
+    "ipch",
+    "x64",
+    "Win32"
   ],
   
   "exclude_patterns": [
@@ -29,7 +43,11 @@
     "*_moc.cpp",
     "*.pb.cc",
     "*.pb.h",
-    "moc_*.cpp"
+    "moc_*.cpp",
+    "*.vcxproj.user",
+    "*_Backup_*.xml",
+    "*.aps",
+    "*.suo"
   ],
   
   "min_file_size": 100,

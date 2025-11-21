@@ -14,7 +14,7 @@ $Timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 Add-Content $LogFile "[$Timestamp] Starting incremental update"
 
 # Activate virtual environment
-& "venv\Scripts\Activate.ps1"
+& "env\Scripts\Activate.ps1"
 
 # Run incremental indexing
 Write-Host "Running incremental update..."
