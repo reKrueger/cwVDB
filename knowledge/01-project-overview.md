@@ -1,30 +1,30 @@
 # Project Overview
 
-Generated: 2025-11-21 13:02:51
+Generated: 2025-11-21 15:44:54
 
 ## File Statistics
 
-Total files indexed: 524
+Total files indexed: 215
 
 ### By Extension
 
-- `.h`: 263 files
-- `.cpp`: 257 files
+- `.h`: 110 files
+- `.cpp`: 101 files
 - `.props`: 2 files
 - `.sln`: 1 files
 - `.vcxproj`: 1 files
 
 ### By Directory
 
-- **waddx**: 524 files
+- **esz**: 215 files
 
 ## Code Structure
 
 - Total classes found: 0
-- Headers: 263
-- Implementations: 257
+- Headers: 110
+- Implementations: 101
 
 ## Visual Studio Projects
 
-- waddx.sln
-- waddx.vcxproj
+- esz.sln
+- esz.vcxproj

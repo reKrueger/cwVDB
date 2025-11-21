@@ -1,22 +1,22 @@
 # cwVDB Quick Reference
 
-Generated: 2025-11-21 13:02:51
+Generated: 2025-11-21 15:44:54
 
 ## Project Overview
 
-- **Total Files:** 524
-- **C++ Headers:** 263
-- **C++ Sources:** 257
+- **Total Files:** 215
+- **C++ Headers:** 110
+- **C++ Sources:** 101
 - **VS Projects:** 1
 - **Solutions:** 1
 
 ## Main Directories
 
-- **waddx**: 524 files
+- **esz**: 215 files
 
 ## File Types
 
-- Headers: 263
-- Implementations: 257
+- Headers: 110
+- Implementations: 101
 - Projects: 2
 - Configs: 2
