@@ -3,6 +3,7 @@
   "vectordb_path": "./vectordb",
   "logs_path": "./logs",
   "checkpoint_path": "./checkpoints",
+  "knowledge_output_path": "./knowledge/generated",
   
   "embedding_model": "all-MiniLM-L6-v2",
   "chunk_size": 1000,
@@ -10,6 +11,7 @@
   
   "file_extensions": [
     ".cpp", ".h", ".hpp", ".c", ".cc",
+    ".md",
     ".sln",
     ".vcxproj",
     ".vcxproj.filters",
@@ -57,5 +59,11 @@
   "batch_size": 100,
   
   "enable_checkpoints": true,
-  "checkpoint_interval": 100
+  "checkpoint_interval": 100,
+  
+  "documentation": {
+    "output_path": "./knowledge/generated",
+    "ai_model": "claude-sonnet-4-20250514",
+    "max_tokens": 2000
+  }
 }

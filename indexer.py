@@ -552,6 +552,21 @@ class CadlibIndexer:
             raise
 
 
+def generate_documentation(config_path: str, limit: int = 100, skip_existing: bool = True):
+    """Generate documentation after indexing"""
+    try:
+        from generate_docs import CDocumentationGenerator
+        print("\n" + "=" * 80)
+        print("DOCUMENTATION GENERATION")
+        print("=" * 80)
+        generator = CDocumentationGenerator(config_path)
+        generator.generateAllDocs(limit, skip_existing)
+    except ImportError as e:
+        print(f"\nWarning: Could not import generate_docs: {e}")
+    except Exception as e:
+        print(f"\nWarning: Documentation generation failed: {e}")
+
+
 def main():
     """Main entry point"""
     import argparse
@@ -561,8 +576,10 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python indexer.py --initial              Run initial full index
-  python indexer.py --incremental          Run incremental update
+  python indexer.py --initial                    Run initial full index
+  python indexer.py --incremental                Run incremental update
+  python indexer.py --initial --generate-docs    Index and generate docs
+  python indexer.py --generate-docs --limit 50   Only generate docs
   python indexer.py --initial --config custom.json
         """
     )
@@ -571,10 +588,21 @@ Examples:
                        help='Run initial full index')
     parser.add_argument('--incremental', action='store_true',
                        help='Run incremental update (git-based)')
+    parser.add_argument('--generate-docs', action='store_true',
+                       help='Generate documentation after indexing')
+    parser.add_argument('--docs-limit', type=int, default=100,
+                       help='Limit number of docs to generate (default: 100)')
+    parser.add_argument('--force-docs', action='store_true',
+                       help='Regenerate existing docs (default: skip existing)')
     parser.add_argument('--config', default='config.json',
                        help='Path to config file (default: config.json)')
     
     args = parser.parse_args()
+    
+    # If only --generate-docs, just generate docs
+    if args.generate_docs and not args.initial and not args.incremental:
+        generate_documentation(args.config, args.docs_limit, not args.force_docs)
+        return
     
     if not args.initial and not args.incremental:
         parser.print_help()
@@ -587,6 +615,10 @@ Examples:
             indexer.run_initial_index()
         elif args.incremental:
             indexer.run_incremental_update()
+        
+        # Generate documentation if requested
+        if args.generate_docs:
+            generate_documentation(args.config, args.docs_limit, not args.force_docs)
             
     except KeyboardInterrupt:
         print("\n\nIndexing interrupted by user")

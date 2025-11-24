@@ -47,3 +47,5 @@ test_vectordb/
 models/
 
 env/
+knowledge/generated/
+claude/
