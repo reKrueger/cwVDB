@@ -65,8 +65,10 @@ class CppParser:
                 header_lines.append(line)
         
         if header_lines:
+            # ID must include file_path to be unique even for files with identical content
+            header_id = hashlib.md5(f"header|{file_path}".encode()).hexdigest()
             chunks.append({
-                'id': f"{file_hash}_header",
+                'id': header_id,
                 'file_path': str(file_path),
                 'content': '\n'.join(header_lines[:20]),
                 'chunk_type': 'file_header',
@@ -76,6 +78,10 @@ class CppParser:
             })
         
         # Function chunks
+        seen_ids = set()
+        for chunk in chunks:
+            seen_ids.add(chunk['id'])
+
         for match in CppParser.FUNCTION_PATTERN.finditer(content):
             func_name = match.group(1)
             start_pos = match.start()
@@ -94,16 +100,18 @@ class CppParser:
             func_content = content[start_pos:pos]
             
             if len(func_content.strip()) > 50:
-                chunk_id = hashlib.md5(f"{file_path}_{func_name}_{start_line}".encode()).hexdigest()
-                chunks.append({
-                    'id': chunk_id,
-                    'file_path': str(file_path),
-                    'content': func_content,
-                    'chunk_type': 'function',
-                    'start_line': start_line,
-                    'end_line': end_line,
-                    'metadata': {'function_name': func_name, **metadata}
-                })
+                chunk_id = hashlib.md5(f"func|{file_path}|{func_name}|{start_line}".encode()).hexdigest()
+                if chunk_id not in seen_ids:
+                    seen_ids.add(chunk_id)
+                    chunks.append({
+                        'id': chunk_id,
+                        'file_path': str(file_path),
+                        'content': func_content,
+                        'chunk_type': 'function',
+                        'start_line': start_line,
+                        'end_line': end_line,
+                        'metadata': {'function_name': func_name, **metadata}
+                    })
         
         # Sliding window chunks
         current_pos = 0
@@ -114,16 +122,18 @@ class CppParser:
             chunk_content = '\n'.join(chunk_lines)
             
             if len(chunk_content.strip()) > 50:
-                chunk_id = hashlib.md5(f"{file_path}_chunk_{chunk_idx}".encode()).hexdigest()
-                chunks.append({
-                    'id': chunk_id,
-                    'file_path': str(file_path),
-                    'content': chunk_content,
-                    'chunk_type': 'code_block',
-                    'start_line': current_pos,
-                    'end_line': current_pos + len(chunk_lines),
-                    'metadata': metadata
-                })
+                chunk_id = hashlib.md5(f"block|{file_path}|{current_pos}|{chunk_idx}".encode()).hexdigest()
+                if chunk_id not in seen_ids:
+                    seen_ids.add(chunk_id)
+                    chunks.append({
+                        'id': chunk_id,
+                        'file_path': str(file_path),
+                        'content': chunk_content,
+                        'chunk_type': 'code_block',
+                        'start_line': current_pos,
+                        'end_line': current_pos + len(chunk_lines),
+                        'metadata': metadata
+                    })
             
             current_pos += chunk_size - chunk_overlap
             chunk_idx += 1
@@ -240,17 +250,20 @@ class CadlibIndexer:
     def store_chunks(self, chunks: List[Dict]):
         if not chunks:
             return
-        self.collection.add(
-            ids=[c['id'] for c in chunks],
-            embeddings=[c['embedding'] for c in chunks],
-            documents=[c['content'] for c in chunks],
-            metadatas=[{
-                'file_path': c['file_path'],
-                'chunk_type': c['chunk_type'],
-                'start_line': c['start_line'],
-                'end_line': c['end_line']
-            } for c in chunks]
-        )
+        MAX_BATCH = 5000  # ChromaDB hard limit is 5461
+        for i in range(0, len(chunks), MAX_BATCH):
+            sub = chunks[i:i + MAX_BATCH]
+            self.collection.add(
+                ids=[c['id'] for c in sub],
+                embeddings=[c['embedding'] for c in sub],
+                documents=[c['content'] for c in sub],
+                metadatas=[{
+                    'file_path': c['file_path'],
+                    'chunk_type': c['chunk_type'],
+                    'start_line': c['start_line'],
+                    'end_line': c['end_line']
+                } for c in sub]
+            )
     
     def run(self):
         """Run full indexing"""
@@ -279,6 +292,11 @@ class CadlibIndexer:
                         all_chunks.extend(chunks)
                 
                 if all_chunks:
+                    # Global dedup across all files in this batch
+                    seen = {}
+                    for c in all_chunks:
+                        seen[c['id']] = c  # last writer wins, same ID = same content anyway
+                    all_chunks = list(seen.values())
                     self.store_chunks(all_chunks)
                     total_chunks += len(all_chunks)
                 
